@@ -1,34 +1,96 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  SafeAreaView,
+  Animated,
+} from "react-native";
 import TinderCard from "react-tinder-card";
 import { LinearGradient } from "expo-linear-gradient";
 
-const db = [
-  { name: "Richard Hendricks" },
-  { name: "Erlich Bachman" },
-  { name: "Monica Hall" },
-  { name: "Jared Dunn" },
-  { name: "Dinesh Chugtai" },
-];
+const words = [
+  { english: "Man", article: "der", singular: "Man", plural: "Die Männe" },
+  { english: "Hand", article: "die", singular: "Hand", plural: "Die Händ" },
+  { english: "Day", article: "der", singular: "Tag", plural: "Die Tage" },
+  { english: "Way", article: "der", singular: "Weg", plural: "Die Weg" },
+  { english: "Eye", article: "das", singular: "Auge", plural: "Die Auge" },
+  { english: "Thing", article: "das", singular: "Ding", plural: "Die Ding" },
+  { english: "Head", article: "der", singular: "Kopf", plural: "Die Köpf" },
+  { english: "Year", article: "das", singular: "Jahr", plural: "Die Jahr" },
+  { english: "Room", article: "die", singular: "Raum", plural: "Die Räume" },
+] as Word[];
 
-const directionToArticle = (direction: string): string => {
-  if (direction === "left") {
-    return "der";
-  } else if (direction === "right") {
-    return "die";
-  } else if (direction === "up") {
-    return "das";
-  } else {
-    return "";
-  }
+const switchTable = {
+  left: "der",
+  right: "die",
+  up: "das",
+  down: "error",
+};
+
+type Direction = "left" | "right" | "up" | "down";
+
+interface Word {
+  english: string;
+  article: string;
+  singular: string;
+  plural: string;
+}
+
+const directionToArticle = (direction: Direction): string => {
+  return switchTable[`${direction}`];
 };
 
 export default function CardDeck() {
-  const characters = db;
+  const wordBank = words;
   const [lastDirection, setLastDirection] = useState("");
+  const [showCards, setShowCards] = useState(true);
+  const [isCorrect, setIsCorrect] = useState(true);
+  const [currentWord, setCurrentWord] = useState<Word | null>(null);
 
-  const swiped = (direction: string, nameToDelete: string) => {
-    console.log("removing: " + nameToDelete);
+  const [animatedValue] = useState(new Animated.Value(0));
+
+  const interpolateColor = animatedValue.interpolate({
+    inputRange: [0, 1, 2, 3],
+    outputRange: ["#0C011E", "#949D6A", "#0C011E", "red"],
+  });
+
+  const animateFromTo = (from: number, to: number) => {
+    animatedValue.setValue(from);
+    Animated.sequence([
+      Animated.timing(animatedValue, {
+        toValue: to,
+        duration: 250,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animatedValue, {
+        toValue: from,
+        duration: 250,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
+
+  const flashColor = (color: "correct" | "incorrect") => {
+    const index = color === "correct" ? 1 : 3;
+    animateFromTo(index - 1, index);
+  };
+
+  const swiped = (direction: Direction, word: Word) => {
+    const chosenArticle = directionToArticle(direction);
+    console.log(`Chosen article: ${chosenArticle}, correct: ${word.article}`);
+    setCurrentWord(word);
+
+    if (chosenArticle === word.article) {
+      flashColor("correct");
+      setIsCorrect(true);
+    } else {
+      flashColor("incorrect");
+      setIsCorrect(false);
+    }
+
     setLastDirection(directionToArticle(direction));
   };
 
@@ -36,76 +98,126 @@ export default function CardDeck() {
     console.log(name + " left the screen!");
   };
 
+  useEffect(() => {
+    if (!showCards) {
+      setShowCards(true);
+    }
+  }, [showCards]);
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={{ flex: 1, backgroundColor: interpolateColor }}>
       <LinearGradient
         style={styles.der}
-        colors={["green", "transparent"]}
-        start={[0, 0.5]}
+        colors={["#cb904d", "transparent"]}
+        start={[0.1, 0.5]}
         end={[1, 0.5]}
-      >
-        <Text style={styles.areaLabel}>Der</Text>
-      </LinearGradient>
+      />
       <LinearGradient
         style={styles.die}
-        colors={["red", "transparent"]}
+        colors={["#BB5084", "transparent"]}
         start={[1, 0.5]}
         end={[0, 0.5]}
-      >
-        <Text style={styles.areaLabel}>Die</Text>
-      </LinearGradient>
+      />
       <LinearGradient
         style={styles.das}
-        colors={["blue", "transparent"]}
-        start={[0.5, 0]}
+        colors={["#51a3a3", "transparent"]}
+        start={[0.5, 0.1]}
         end={[0.5, 1]}
-      >
-        <Text style={styles.areaLabel}>Das</Text>
-      </LinearGradient>
-      <View style={styles.cardContainer}>
-        {characters.map((character) => (
-          <TinderCard
-            key={character.name}
-            onSwipe={(dir) => swiped(dir, character.name)}
-            onCardLeftScreen={() => outOfFrame(character.name)}
-            onSwipeRequirementFulfilled={(direction: string) =>
-              console.log("Fulfilled, " + direction)
-            }
-            swipeRequirementType="position"
-            preventSwipe={["down"]}
-          >
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>{character.name}</Text>
+      />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.topContainer}>
+          <Text style={styles.areaLabel}>Das</Text>
+        </View>
+        <View style={styles.bottomContainer}>
+          <View style={styles.leftContainer}>
+            <Text style={styles.areaLabel}>Der</Text>
+          </View>
+          <View style={styles.midContainer}>
+            <View style={styles.infoContainer}>
+              {lastDirection && (
+                <Text style={styles.infoText}>Chosen: {lastDirection}</Text>
+              )}
+              {currentWord && (
+                <Text style={styles.infoText}>Correct: {currentWord.article}</Text>
+              )}
             </View>
-          </TinderCard>
-        ))}
-      </View>
-
-      {lastDirection ? (
-        <Text style={styles.infoText}>You chose {lastDirection}</Text>
-      ) : (
-        <Text style={styles.infoText} />
-      )}
-    </View>
+            {showCards && (
+              <View style={styles.cardContainer}>
+                {wordBank.map((word) => (
+                  <TinderCard
+                    key={word.singular}
+                    onSwipe={(dir) => swiped(dir, word)}
+                    onCardLeftScreen={() => outOfFrame(word.singular)}
+                    onSwipeRequirementFulfilled={(direction: string) =>
+                      console.log("Fulfilled, " + direction)
+                    }
+                    swipeRequirementType="position"
+                    preventSwipe={["down"]}
+                  >
+                    <View style={styles.card}>
+                      <Text style={styles.cardTitle}>{word.singular}</Text>
+                      <Text style={styles.cardTitle}>( pl. {word.plural})</Text>
+                    </View>
+                  </TinderCard>
+                ))}
+              </View>
+            )}
+            <TouchableOpacity
+              style={styles.resetButton}
+              onPress={() => setShowCards(false)}
+            >
+              <Text style={{ color: "white", fontSize: 20 }}>Reset</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.rightContainer}>
+            <Text style={styles.areaLabel}>Die</Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
     flex: 1,
   },
-  header: {
-    color: "#000",
-    fontSize: 30,
-    marginBottom: 30,
+  topContainer: {
+    width: "100%",
+    height: 60,
+    alignItems: "center",
+    flex: 1,
+  },
+  bottomContainer: {
+    width: "100%",
+    flexDirection: "row",
+    flex: 10,
+  },
+  leftContainer: {
+    flex: 1,
+    justifyContent: "center",
+    height: "100%",
+    paddingLeft: 20,
+  },
+  midContainer: {
+    flex: 5,
+    height: "100%",
+    // backgroundColor: "white",
+  },
+  infoContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  rightContainer: {
+    flex: 1,
+    alignItems: "flex-end",
+    justifyContent: "center",
+    height: "100%",
+    paddingRight: 20,
   },
   cardContainer: {
-    position: "absolute",
-    top: "60%",
     width: 250,
     height: 250,
   },
@@ -132,10 +244,19 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   infoText: {
-    height: 28,
     justifyContent: "center",
-    display: "flex",
-    zIndex: -100,
+    color: "white",
+    fontSize: 35,
+  },
+  areaLabel: {
+    fontSize: 35,
+    color: "white",
+  },
+  resetButton: {
+    height: 60,
+    width: "100%",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   der: {
     position: "absolute",
@@ -150,7 +271,7 @@ const styles = StyleSheet.create({
     top: 0,
     width: "100%",
     height: "50%",
-    paddingTop: 20,
+    paddingTop: 50,
     alignItems: "center",
   },
   die: {
@@ -161,9 +282,5 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     justifyContent: "center",
     alignItems: "flex-end",
-  },
-  areaLabel: {
-    fontSize: 35,
-    color: "white",
   },
 });

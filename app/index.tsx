@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Switch,
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  SafeAreaView,
-  StatusBar,
-} from "react-native";
+import { View, StatusBar } from "react-native";
 import CardDeck from "@/components/CardDeck";
 
 export default function index() {
@@ -20,26 +12,9 @@ export default function index() {
   }, [hasReset]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{ flex: 1 }}>
       <StatusBar barStyle={"light-content"} />
       {!hasReset && <CardDeck />}
-      <View style={styles.row}>
-        <Button title="Reset" onPress={() => setHasReset(true)} />
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    minHeight: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
