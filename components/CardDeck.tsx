@@ -68,6 +68,11 @@ export default function CardDeck() {
             key={character.name}
             onSwipe={(dir) => swiped(dir, character.name)}
             onCardLeftScreen={() => outOfFrame(character.name)}
+            onSwipeRequirementFulfilled={(direction: string) =>
+              console.log("Fulfilled, " + direction)
+            }
+            swipeRequirementType="position"
+            preventSwipe={["down"]}
           >
             <View style={styles.card}>
               <Text style={styles.cardTitle}>{character.name}</Text>
