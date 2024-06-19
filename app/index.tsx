@@ -26,7 +26,7 @@ const database: { [key: string]: Word[] } = {
   Schule: dataSchule,
   Badezimmer: dataBadezimmer,
   Küche: dataKueche,
-  Test: test,
+  // Test: test,
 };
 
 export default function index() {
@@ -52,6 +52,7 @@ export default function index() {
           {decks.map((deck) => {
             return <DeckCard key={deck} title={deck} onPress={toGameScreen} />;
           })}
+          <DeckCard title="+" onPress={() => {}} />
         </ScrollView>
       </SafeAreaView>
     </View>

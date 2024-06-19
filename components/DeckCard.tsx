@@ -20,7 +20,7 @@ export default function DeckCard({ title, onPress }: Props) {
       }}
       onPress={() => onPress(title)}
     >
-      <Text>{title}</Text>
+      <Text style={{ fontSize: 18 }}>{title}</Text>
     </TouchableOpacity>
   );
 }
