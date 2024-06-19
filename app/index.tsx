@@ -1,35 +1,58 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StatusBar,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import CardDeck, { Word } from "@/components/CardDeck";
+import { View, Text, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { Word } from "@/components/CardDeck";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import { router } from "expo-router";
+import DeckCard from "@/components/DeckCard";
 
+// prettier-ignore
 const database: { [key: string]: Word[] } = {
   Test: [
-    { english: "Man", article: "der", singular: "Man", plural: "Die Männe" },
-    { english: "Hand", article: "die", singular: "Hand", plural: "Die Händ" },
-    { english: "Day", article: "der", singular: "Tag", plural: "Die Tage" },
-    { english: "Way", article: "der", singular: "Weg", plural: "Die Weg" },
+    { english: "Day", article: "der", singular: "Tag", plural: "die Tage" },
+    { english: "Way", article: "der", singular: "Weg", plural: "die Weg" },
   ],
-  "Lektion 10": [
-    { english: "Eye", article: "das", singular: "Auge", plural: "Die Auge" },
-    { english: "Thing", article: "das", singular: "Ding", plural: "Die Ding" },
-    { english: "Head", article: "der", singular: "Kopf", plural: "Die Köpf" },
-    { english: "Year", article: "das", singular: "Jahr", plural: "Die Jahr" },
+  "Badezimmer": [
+    { english: "Towel", article: "das", singular: "Handtuch", plural: "Handtücher" },
+    { english: "Soap", article: "die", singular: "Seife", plural: "Seifen" },
+    { english: "Toothbrush", article: "die", singular: "Zahnbürste", plural: "Zahnbürsten" },
+    { english: "Toothpaste", article: "die", singular: "Zahnpasta", plural: "Zahnpasten" },
+    { english: "Shampoo", article: "das", singular: "Shampoo", plural: "Shampoos" },
+    { english: "Sink", article: "das", singular: "Waschbecken", plural: "Waschbecken" },
+    { english: "Shower", article: "die", singular: "Dusche", plural: "Duschen" },
+    { english: "Mirror", article: "der", singular: "Spiegel", plural: "Spiegel" },
+    { english: "Toilet", article: "die", singular: "Toilette", plural: "Toiletten" },
+    { english: "Bathtub", article: "die", singular: "Badewanne", plural: "Badewannen" }
   ],
-  "Lektion 11": [
-    { english: "Room", article: "die", singular: "Raum", plural: "Die Räume" },
-    { english: "Man", article: "der", singular: "Man", plural: "Die Männe" },
-    { english: "Hand", article: "die", singular: "Hand", plural: "Die Händ" },
-    { english: "Day", article: "der", singular: "Tag", plural: "Die Tage" },
+  
+  "Küche": [
+    { english: "Knife", article: "das", singular: "Messer", plural: "Messer" },
+    { english: "Fork", article: "die", singular: "Gabel", plural: "Gabeln" },
+    { english: "Spoon", article: "der", singular: "Löffel", plural: "Löffel" },
+    { english: "Plate", article: "der", singular: "Teller", plural: "Teller" },
+    { english: "Cup", article: "die", singular: "Tasse", plural: "Tassen" },
+    { english: "Glass", article: "das", singular: "Glas", plural: "Gläser" },
+    { english: "Pan", article: "die", singular: "Pfanne", plural: "Pfannen" },
+    { english: "Pot", article: "der", singular: "Topf", plural: "Töpfe" },
+    { english: "Fridge", article: "der", singular: "Kühlschrank", plural: "Kühlschränke" },
+    { english: "Oven", article: "der", singular: "Ofen", plural: "Öfen" },
+    { english: "Microwave", article: "die", singular: "Mikrowelle", plural: "Mikrowellen" },
+    { english: "Sink", article: "das", singular: "Spülbecken", plural: "Spülbecken" },
+    { english: "Stove", article: "der", singular: "Herd", plural: "Herde" }
   ],
+  "Schalfzimmer": [
+    { english: "Bed", article: "das", singular: "Bett", plural: "Betten" },
+    { english: "Pillow", article: "das", singular: "Kissen", plural: "Kissen" },
+    { english: "Blanket", article: "die", singular: "Decke", plural: "Decken" },
+    { english: "Wardrobe", article: "der", singular: "Kleiderschrank", plural: "Kleiderschränke" },
+    { english: "Dresser", article: "die", singular: "Kommode", plural: "Kommoden" },
+    { english: "Nightstand", article: "der", singular: "Nachttisch", plural: "Nachttische" },
+    { english: "Lamp", article: "die", singular: "Lampe", plural: "Lampen" },
+    { english: "Curtain", article: "der", singular: "Vorhang", plural: "Vorhänge" },
+    { english: "Mirror", article: "der", singular: "Spiegel", plural: "Spiegel" },
+    { english: "Carpet", article: "der", singular: "Teppich", plural: "Teppiche" }
+  ]
+  
+  
 };
 
 export default function index() {
@@ -43,46 +66,48 @@ export default function index() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0C011E" }}>
+    <View style={styles.rootContainer}>
       <BackgroundGradient />
-      <SafeAreaView style={{ flex: 1, alignItems: "center", padding: 20 }}>
-        <Text style={{ fontSize: 35, color: "white" }}>Welcome to Der Swiper!</Text>
-        <Text style={{ padding: 30, color: "white", fontSize: 20, textAlign: "center" }}>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Welcome to Der Swiper!</Text>
+        <Text style={styles.paragraph}>
           This game allows you to swipe nouns to classify them into either der, die or
           das. Choose from some of the word decks below.
         </Text>
-        <ScrollView
-          style={{
-            flex: 1,
-          }}
-          contentContainerStyle={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: 20,
-            justifyContent: "center",
-          }}
-        >
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
           {decks.map((deck) => {
-            return (
-              <TouchableOpacity
-                key={deck}
-                activeOpacity={0.8}
-                style={{
-                  width: 150,
-                  height: 150,
-                  backgroundColor: "white",
-                  borderRadius: 15,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                onPress={() => toGameScreen(deck)}
-              >
-                <Text>{deck}</Text>
-              </TouchableOpacity>
-            );
+            return <DeckCard key={deck} title={deck} onPress={toGameScreen} />;
           })}
         </ScrollView>
       </SafeAreaView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+    backgroundColor: "#0C011E",
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    padding: 20,
+  },
+  title: {
+    fontSize: 35,
+    color: "white",
+  },
+  paragraph: {
+    padding: 30,
+    color: "white",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  scrollContent: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 20,
+    justifyContent: "center",
+  },
+});
