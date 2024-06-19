@@ -1,0 +1,32 @@
+[
+  {
+    "english": "Desk",
+    "article": "der",
+    "singular": "Schreibtisch",
+    "plural": "Schreibtische"
+  },
+  { "english": "Chair", "article": "der", "singular": "Stuhl", "plural": "Stühle" },
+  {
+    "english": "Computer",
+    "article": "der",
+    "singular": "Computer",
+    "plural": "Computer"
+  },
+  { "english": "Printer", "article": "der", "singular": "Drucker", "plural": "Drucker" },
+  {
+    "english": "Notebook",
+    "article": "das",
+    "singular": "Notizbuch",
+    "plural": "Notizbücher"
+  },
+  { "english": "Pen", "article": "der", "singular": "Stift", "plural": "Stifte" },
+  { "english": "Paper", "article": "das", "singular": "Papier", "plural": "Papiere" },
+  { "english": "Folder", "article": "der", "singular": "Ordner", "plural": "Ordner" },
+  {
+    "english": "Telephone",
+    "article": "das",
+    "singular": "Telefon",
+    "plural": "Telefone"
+  },
+  { "english": "Stapler", "article": "der", "singular": "Tacker", "plural": "Tacker" }
+]

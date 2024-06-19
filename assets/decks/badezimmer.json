@@ -1,0 +1,42 @@
+[
+  {
+    "english": "Towel",
+    "article": "das",
+    "singular": "Handtuch",
+    "plural": "Handtücher"
+  },
+  { "english": "Soap", "article": "die", "singular": "Seife", "plural": "Seifen" },
+  {
+    "english": "Toothbrush",
+    "article": "die",
+    "singular": "Zahnbürste",
+    "plural": "Zahnbürsten"
+  },
+  {
+    "english": "Toothpaste",
+    "article": "die",
+    "singular": "Zahnpasta",
+    "plural": "Zahnpasten"
+  },
+  { "english": "Shampoo", "article": "das", "singular": "Shampoo", "plural": "Shampoos" },
+  {
+    "english": "Sink",
+    "article": "das",
+    "singular": "Waschbecken",
+    "plural": "Waschbecken"
+  },
+  { "english": "Shower", "article": "die", "singular": "Dusche", "plural": "Duschen" },
+  { "english": "Mirror", "article": "der", "singular": "Spiegel", "plural": "Spiegel" },
+  {
+    "english": "Toilet",
+    "article": "die",
+    "singular": "Toilette",
+    "plural": "Toiletten"
+  },
+  {
+    "english": "Bathtub",
+    "article": "die",
+    "singular": "Badewanne",
+    "plural": "Badewannen"
+  }
+]

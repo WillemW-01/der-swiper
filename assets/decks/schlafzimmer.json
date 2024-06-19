@@ -1,0 +1,22 @@
+[
+  { "english": "Bed", "article": "das", "singular": "Bett", "plural": "Betten" },
+  { "english": "Pillow", "article": "das", "singular": "Kissen", "plural": "Kissen" },
+  { "english": "Blanket", "article": "die", "singular": "Decke", "plural": "Decken" },
+  {
+    "english": "Wardrobe",
+    "article": "der",
+    "singular": "Kleiderschrank",
+    "plural": "Kleiderschränke"
+  },
+  { "english": "Dresser", "article": "die", "singular": "Kommode", "plural": "Kommoden" },
+  {
+    "english": "Nightstand",
+    "article": "der",
+    "singular": "Nachttisch",
+    "plural": "Nachttische"
+  },
+  { "english": "Lamp", "article": "die", "singular": "Lampe", "plural": "Lampen" },
+  { "english": "Curtain", "article": "der", "singular": "Vorhang", "plural": "Vorhänge" },
+  { "english": "Mirror", "article": "der", "singular": "Spiegel", "plural": "Spiegel" },
+  { "english": "Carpet", "article": "der", "singular": "Teppich", "plural": "Teppiche" }
+]

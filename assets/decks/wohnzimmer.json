@@ -1,0 +1,32 @@
+[
+  { "english": "Sofa", "article": "das", "singular": "Sofa", "plural": "Sofas" },
+  {
+    "english": "Television",
+    "article": "der",
+    "singular": "Fernseher",
+    "plural": "Fernseher"
+  },
+  {
+    "english": "Coffee Table",
+    "article": "der",
+    "singular": "Kaffeetisch",
+    "plural": "Kaffeetische"
+  },
+  {
+    "english": "Bookshelf",
+    "article": "das",
+    "singular": "Bücherregal",
+    "plural": "Bücherregale"
+  },
+  { "english": "Cushion", "article": "das", "singular": "Kissen", "plural": "Kissen" },
+  {
+    "english": "Curtains",
+    "article": "die",
+    "singular": "Vorhänge",
+    "plural": "Vorhänge"
+  },
+  { "english": "Rug", "article": "der", "singular": "Teppich", "plural": "Teppiche" },
+  { "english": "Lamp", "article": "die", "singular": "Lampe", "plural": "Lampen" },
+  { "english": "Painting", "article": "das", "singular": "Gemälde", "plural": "Gemälde" },
+  { "english": "Fireplace", "article": "der", "singular": "Kamin", "plural": "Kamine" }
+]

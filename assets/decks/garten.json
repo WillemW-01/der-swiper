@@ -1,0 +1,32 @@
+[
+  { "english": "Flower", "article": "die", "singular": "Blume", "plural": "Blumen" },
+  { "english": "Tree", "article": "der", "singular": "Baum", "plural": "Bäume" },
+  { "english": "Grass", "article": "das", "singular": "Gras", "plural": "Gräser" },
+  {
+    "english": "Shovel",
+    "article": "die",
+    "singular": "Schaufel",
+    "plural": "Schaufeln"
+  },
+  {
+    "english": "Lawnmower",
+    "article": "der",
+    "singular": "Rasenmäher",
+    "plural": "Rasenmäher"
+  },
+  { "english": "Hose", "article": "der", "singular": "Schlauch", "plural": "Schläuche" },
+  {
+    "english": "Wheelbarrow",
+    "article": "die",
+    "singular": "Schubkarre",
+    "plural": "Schubkarren"
+  },
+  { "english": "Fence", "article": "der", "singular": "Zaun", "plural": "Zäune" },
+  {
+    "english": "Garden Chair",
+    "article": "der",
+    "singular": "Gartenstuhl",
+    "plural": "Gartenstühle"
+  },
+  { "english": "Plant", "article": "die", "singular": "Pflanze", "plural": "Pflanzen" }
+]

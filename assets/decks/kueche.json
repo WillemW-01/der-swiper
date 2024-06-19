@@ -1,0 +1,30 @@
+[
+  { "english": "Knife", "article": "das", "singular": "Messer", "plural": "Messer" },
+  { "english": "Fork", "article": "die", "singular": "Gabel", "plural": "Gabeln" },
+  { "english": "Spoon", "article": "der", "singular": "Löffel", "plural": "Löffel" },
+  { "english": "Plate", "article": "der", "singular": "Teller", "plural": "Teller" },
+  { "english": "Cup", "article": "die", "singular": "Tasse", "plural": "Tassen" },
+  { "english": "Glass", "article": "das", "singular": "Glas", "plural": "Gläser" },
+  { "english": "Pan", "article": "die", "singular": "Pfanne", "plural": "Pfannen" },
+  { "english": "Pot", "article": "der", "singular": "Topf", "plural": "Töpfe" },
+  {
+    "english": "Fridge",
+    "article": "der",
+    "singular": "Kühlschrank",
+    "plural": "Kühlschränke"
+  },
+  { "english": "Oven", "article": "der", "singular": "Ofen", "plural": "Öfen" },
+  {
+    "english": "Microwave",
+    "article": "die",
+    "singular": "Mikrowelle",
+    "plural": "Mikrowellen"
+  },
+  {
+    "english": "Sink",
+    "article": "das",
+    "singular": "Spülbecken",
+    "plural": "Spülbecken"
+  },
+  { "english": "Stove", "article": "der", "singular": "Herd", "plural": "Herde" }
+]

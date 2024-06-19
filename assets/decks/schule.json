@@ -1,0 +1,37 @@
+[
+  { "english": "Blackboard", "article": "die", "singular": "Tafel", "plural": "Tafeln" },
+  {
+    "english": "Desk",
+    "article": "der",
+    "singular": "Schreibtisch",
+    "plural": "Schreibtische"
+  },
+  { "english": "Chair", "article": "der", "singular": "Stuhl", "plural": "Stühle" },
+  {
+    "english": "Notebook",
+    "article": "das",
+    "singular": "Notizbuch",
+    "plural": "Notizbücher"
+  },
+  { "english": "Pen", "article": "der", "singular": "Stift", "plural": "Stifte" },
+  {
+    "english": "Eraser",
+    "article": "der",
+    "singular": "Radiergummi",
+    "plural": "Radiergummis"
+  },
+  { "english": "Ruler", "article": "das", "singular": "Lineal", "plural": "Lineale" },
+  { "english": "Book", "article": "das", "singular": "Buch", "plural": "Bücher" },
+  {
+    "english": "Backpack",
+    "article": "der",
+    "singular": "Rucksack",
+    "plural": "Rucksäcke"
+  },
+  {
+    "english": "Pencil Case",
+    "article": "das",
+    "singular": "Federmäppchen",
+    "plural": "Federmäppchen"
+  }
+]

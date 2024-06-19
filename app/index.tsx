@@ -5,54 +5,28 @@ import BackgroundGradient from "@/components/BackgroundGradient";
 import { router } from "expo-router";
 import DeckCard from "@/components/DeckCard";
 
+const dataSchlafzimmer = require("@/assets/decks/schlafzimmer.json") as Word[];
+const dataWohnzimmer = require("@/assets/decks/wohnzimmer.json") as Word[];
+const dataBuro = require("@/assets/decks/buro.json") as Word[];
+const dataGarten = require("@/assets/decks/garten.json") as Word[];
+const dataSchule = require("@/assets/decks/schule.json") as Word[];
+const dataBadezimmer = require("@/assets/decks/badezimmer.json") as Word[];
+const dataKueche = require("@/assets/decks/kueche.json") as Word[];
+const test = [
+  { english: "Day", article: "der", singular: "Tag", plural: "die Tage" },
+  { english: "Way", article: "der", singular: "Weg", plural: "die Weg" },
+] as Word[];
+
 // prettier-ignore
 const database: { [key: string]: Word[] } = {
-  Test: [
-    { english: "Day", article: "der", singular: "Tag", plural: "die Tage" },
-    { english: "Way", article: "der", singular: "Weg", plural: "die Weg" },
-  ],
-  "Badezimmer": [
-    { english: "Towel", article: "das", singular: "Handtuch", plural: "Handtücher" },
-    { english: "Soap", article: "die", singular: "Seife", plural: "Seifen" },
-    { english: "Toothbrush", article: "die", singular: "Zahnbürste", plural: "Zahnbürsten" },
-    { english: "Toothpaste", article: "die", singular: "Zahnpasta", plural: "Zahnpasten" },
-    { english: "Shampoo", article: "das", singular: "Shampoo", plural: "Shampoos" },
-    { english: "Sink", article: "das", singular: "Waschbecken", plural: "Waschbecken" },
-    { english: "Shower", article: "die", singular: "Dusche", plural: "Duschen" },
-    { english: "Mirror", article: "der", singular: "Spiegel", plural: "Spiegel" },
-    { english: "Toilet", article: "die", singular: "Toilette", plural: "Toiletten" },
-    { english: "Bathtub", article: "die", singular: "Badewanne", plural: "Badewannen" }
-  ],
-  
-  "Küche": [
-    { english: "Knife", article: "das", singular: "Messer", plural: "Messer" },
-    { english: "Fork", article: "die", singular: "Gabel", plural: "Gabeln" },
-    { english: "Spoon", article: "der", singular: "Löffel", plural: "Löffel" },
-    { english: "Plate", article: "der", singular: "Teller", plural: "Teller" },
-    { english: "Cup", article: "die", singular: "Tasse", plural: "Tassen" },
-    { english: "Glass", article: "das", singular: "Glas", plural: "Gläser" },
-    { english: "Pan", article: "die", singular: "Pfanne", plural: "Pfannen" },
-    { english: "Pot", article: "der", singular: "Topf", plural: "Töpfe" },
-    { english: "Fridge", article: "der", singular: "Kühlschrank", plural: "Kühlschränke" },
-    { english: "Oven", article: "der", singular: "Ofen", plural: "Öfen" },
-    { english: "Microwave", article: "die", singular: "Mikrowelle", plural: "Mikrowellen" },
-    { english: "Sink", article: "das", singular: "Spülbecken", plural: "Spülbecken" },
-    { english: "Stove", article: "der", singular: "Herd", plural: "Herde" }
-  ],
-  "Schalfzimmer": [
-    { english: "Bed", article: "das", singular: "Bett", plural: "Betten" },
-    { english: "Pillow", article: "das", singular: "Kissen", plural: "Kissen" },
-    { english: "Blanket", article: "die", singular: "Decke", plural: "Decken" },
-    { english: "Wardrobe", article: "der", singular: "Kleiderschrank", plural: "Kleiderschränke" },
-    { english: "Dresser", article: "die", singular: "Kommode", plural: "Kommoden" },
-    { english: "Nightstand", article: "der", singular: "Nachttisch", plural: "Nachttische" },
-    { english: "Lamp", article: "die", singular: "Lampe", plural: "Lampen" },
-    { english: "Curtain", article: "der", singular: "Vorhang", plural: "Vorhänge" },
-    { english: "Mirror", article: "der", singular: "Spiegel", plural: "Spiegel" },
-    { english: "Carpet", article: "der", singular: "Teppich", plural: "Teppiche" }
-  ]
-  
-  
+  Schlafzimmer: dataSchlafzimmer,
+  Wohnzimmer: dataWohnzimmer,
+  Burö: dataBuro,
+  Garten: dataGarten,
+  Schule: dataSchule,
+  Badezimmer: dataBadezimmer,
+  Küche: dataKueche,
+  Test: test,
 };
 
 export default function index() {
