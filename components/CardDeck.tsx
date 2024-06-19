@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import TinderCard from "react-tinder-card";
 import { LinearGradient } from "expo-linear-gradient";
+import BackgroundGradient from "./BackgroundGradient";
 
 const words = [
   { english: "Man", article: "der", singular: "Man", plural: "Die Männe" },
@@ -32,7 +33,7 @@ const switchTable = {
 
 type Direction = "left" | "right" | "up" | "down";
 
-interface Word {
+export interface Word {
   english: string;
   article: string;
   singular: string;
@@ -106,24 +107,7 @@ export default function CardDeck() {
 
   return (
     <Animated.View style={{ flex: 1, backgroundColor: interpolateColor }}>
-      <LinearGradient
-        style={styles.der}
-        colors={["#cb904d", "transparent"]}
-        start={[0.1, 0.5]}
-        end={[1, 0.5]}
-      />
-      <LinearGradient
-        style={styles.die}
-        colors={["#BB5084", "transparent"]}
-        start={[1, 0.5]}
-        end={[0, 0.5]}
-      />
-      <LinearGradient
-        style={styles.das}
-        colors={["#51a3a3", "transparent"]}
-        start={[0.5, 0.1]}
-        end={[0.5, 1]}
-      />
+      <BackgroundGradient />
       <SafeAreaView style={styles.container}>
         <View style={styles.topContainer}>
           <Text style={styles.areaLabel}>Das</Text>
@@ -203,7 +187,6 @@ const styles = StyleSheet.create({
   midContainer: {
     flex: 5,
     height: "100%",
-    // backgroundColor: "white",
   },
   infoContainer: {
     flex: 1,
