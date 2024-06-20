@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, Button } from "react-native";
 import { Word } from "@/components/CardDeck";
 import BackgroundGradient from "@/components/BackgroundGradient";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import DeckCard, { Progress, Tier } from "@/components/DeckCard";
 
 const dataSchlafzimmer = require("@/assets/decks/schlafzimmer.json") as Word[];
@@ -26,15 +26,58 @@ const database: { [key: string]: Word[] } = {
 
 export default function index() {
   const deckNames = Object.keys(database);
-  const progresses = [3, 0, 2, 4, 1, 0, 3] as Progress[];
-  const tiers = [0, 1, 2, 3, 4, 0, 1] as Tier[];
+  const [progresses, setProgresses] = useState<Progress[]>([3, 0, 2, 4, 1, 0, 3]);
+  const [tiers, setTiers] = useState<Tier[]>([0, 1, 2, 3, 4, 0, 1]);
+
+  const { deck, title, amountCorrect, progress } = useLocalSearchParams();
 
   const toGameScreen = (key: string) => {
     router.navigate({
       pathname: "/gameScreen",
-      params: { deck: JSON.stringify(database[key]), title: key },
+      params: {
+        deck: JSON.stringify(database[key]),
+        title: key,
+        amountCorrect: -1,
+        progress: -1,
+      },
     });
   };
+
+  useEffect(() => {
+    if (amountCorrect && progress && title) {
+      if (amountCorrect == progress) {
+        const index = deckNames.indexOf(title as string);
+        console.log("All correct!");
+
+        const tempProgresses = [...progresses];
+        const tempTiers = [...tiers];
+
+        if (tempTiers[index] == 4 && tempProgresses[index] == 4) {
+          console.log("Max tier and progress!");
+          return;
+        } else {
+          console.log("Before tier: ", tempTiers[index]);
+          console.log("Before progress: ", tempProgresses[index]);
+          tempProgresses[index] += 1;
+          console.log("Updated progress: ", tempProgresses[index]);
+          if (tempProgresses[index] > 4) {
+            console.log("Bumping up tier!");
+            tempTiers[index] += tempTiers[index] <= 3 ? 1 : 0;
+            console.log("After tier: ", tempTiers[index]);
+            tempProgresses[index] = 0;
+            console.log("Updated progress: ", tempProgresses[index]);
+          }
+
+          setProgresses(tempProgresses);
+          setTiers(tempTiers);
+        }
+      } else {
+        console.log("Not all correct: ", amountCorrect, progress);
+      }
+
+      console.log("Amount correct:", amountCorrect, "Progress:", progress);
+    }
+  }, []);
 
   return (
     <View style={styles.rootContainer}>

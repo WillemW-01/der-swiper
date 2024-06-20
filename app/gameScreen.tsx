@@ -149,7 +149,15 @@ export default function CardDeck() {
 
   const finishRound = () => {
     console.log("Finishing!");
-    router.navigate("/");
+    router.replace({
+      pathname: "/",
+      params: {
+        deck,
+        title,
+        amountCorrect,
+        progress,
+      },
+    });
   };
 
   const resetCards = () => {
