@@ -1,5 +1,5 @@
-import { useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Animated,
+  Dimensions,
 } from "react-native";
 
 import BackgroundGradient from "@/components/BackgroundGradient";
@@ -40,31 +41,36 @@ export default function CardDeck() {
   const [isCorrect, setIsCorrect] = useState(true);
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
   const [renderKey, setRenderKey] = useState(0);
+  const [isFadingIn, setIsFadingIn] = useState(false);
+  const [hasFaded, setHasFaded] = useState(false);
 
-  const [animatedValue] = useState(new Animated.Value(0));
+  const [progress, setProgress] = useState(0);
+  const [amountCorrect, setAmountCorrect] = useState(0);
 
-  const interpolateColor = animatedValue.interpolate({
+  const [flashAnim] = useState(new Animated.Value(0));
+
+  const interpolateColor = flashAnim.interpolate({
     inputRange: [0, 1, 2, 3],
     outputRange: ["#0C011E", "#949D6A", "#0C011E", "red"],
   });
 
   const animateFromTo = useCallback(
     (from: number, to: number) => {
-      animatedValue.setValue(from);
+      flashAnim.setValue(from);
       Animated.sequence([
-        Animated.timing(animatedValue, {
+        Animated.timing(flashAnim, {
           toValue: to,
           duration: 250,
           useNativeDriver: false,
         }),
-        Animated.timing(animatedValue, {
+        Animated.timing(flashAnim, {
           toValue: from,
           duration: 250,
           useNativeDriver: false,
         }),
       ]).start();
     },
-    [animatedValue]
+    [flashAnim]
   );
 
   const flashColor = useCallback(
@@ -75,16 +81,62 @@ export default function CardDeck() {
     [animateFromTo]
   );
 
-  const swiped = (direction: Direction, word: Word) => {
+  const [fadeInAndOutAnim] = useState(new Animated.Value(0));
+  const [fadeInAnim] = useState(new Animated.Value(0));
+
+  const fadeInAndOut = () => {
+    Animated.sequence([
+      Animated.timing(fadeInAndOutAnim, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.delay(700),
+      Animated.timing(fadeInAndOutAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const fadeIn = (delay: number = 0) => {
+    setIsFadingIn(true);
+    console.log("This is running!");
+    Animated.sequence([
+      Animated.delay(delay),
+      Animated.timing(fadeInAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setIsFadingIn(false);
+      setHasFaded(true);
+    });
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeInAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleSwipe = (direction: Direction, word: Word) => {
     const chosenArticle = directionToArticle(direction);
     console.log(`Chosen article: ${chosenArticle}, correct: ${word.article}`);
     setCurrentWord(word);
+    setProgress((prev) => prev + 1);
 
     if (chosenArticle === word.article) {
       flashColor("correct");
       setIsCorrect(true);
+      setAmountCorrect((prev) => prev + 1);
     } else {
       flashColor("incorrect");
+      fadeInAndOut();
       setIsCorrect(false);
     }
 
@@ -95,10 +147,30 @@ export default function CardDeck() {
     console.log(name + " left the screen!");
   };
 
-  useEffect(() => {
+  const finishRound = () => {
+    console.log("Finishing!");
+    router.navigate("/");
+  };
+
+  const resetCards = () => {
     if (!showCards) {
+      setProgress(0);
+      setAmountCorrect(0);
       setShowCards(true);
+      setHasFaded(false);
+      setIsFadingIn(false);
+      fadeOut();
     }
+  };
+
+  useEffect(() => {
+    if (progress == wordBank.length && !hasFaded && !isFadingIn) {
+      fadeIn(1000);
+    }
+  });
+
+  useEffect(() => {
+    resetCards();
   }, [showCards]);
 
   return (
@@ -106,28 +178,30 @@ export default function CardDeck() {
       <BackgroundGradient />
       <SafeAreaView style={styles.container}>
         <View style={styles.topContainer}>
+          <Text style={styles.counterText}>{wordBank.length - progress}</Text>
           <Text style={styles.areaLabel}>Das</Text>
+          <Text style={styles.finishedText}>
+            <Text style={{ color: "#e97d02" }}>{amountCorrect}</Text> |{" "}
+            <Text style={{ color: "#da488f" }}>{progress - amountCorrect}</Text>
+          </Text>
         </View>
         <View style={styles.bottomContainer}>
           <View style={styles.leftContainer}>
             <Text style={styles.areaLabel}>Der</Text>
           </View>
           <View style={styles.midContainer}>
-            <View style={styles.infoContainer}>
-              {lastDirection && (
-                <Text style={styles.infoText}>Chosen: {lastDirection}</Text>
-              )}
-              {currentWord && (
-                <Text style={styles.infoText}>Correct: {currentWord.article}</Text>
-              )}
-            </View>
+            <Animated.View style={[styles.infoContainer, { opacity: fadeInAndOutAnim }]}>
+              {currentWord && <Text style={styles.infoText}>{currentWord.article}</Text>}
+            </Animated.View>
+
             <View key={renderKey} style={styles.cardContainer}>
               {wordBank &&
+                showCards &&
                 wordBank.map((word, index) => (
                   <WordCard
                     key={index}
                     word={word}
-                    swiped={swiped}
+                    swiped={handleSwipe}
                     outOfFrame={outOfFrame}
                   />
                 ))}
@@ -137,7 +211,8 @@ export default function CardDeck() {
             </Text>
             <TouchableOpacity
               style={styles.resetButton}
-              onPress={() => setRenderKey((prev) => prev + 1)}
+              onPress={() => setShowCards(false)}
+              disabled={isFadingIn}
             >
               <Text style={{ color: "white", fontSize: 20 }}>Reset</Text>
             </TouchableOpacity>
@@ -146,10 +221,17 @@ export default function CardDeck() {
             <Text style={styles.areaLabel}>Die</Text>
           </View>
         </View>
+        <Animated.View style={{ ...styles.doneButtonContainer, opacity: fadeInAnim }}>
+          <TouchableOpacity style={styles.doneButton} onPress={finishRound}>
+            <Text style={{ color: "white", fontSize: 25 }}>Done</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </SafeAreaView>
     </Animated.View>
   );
 }
+
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -161,6 +243,8 @@ const styles = StyleSheet.create({
     height: 60,
     alignItems: "center",
     flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   bottomContainer: {
     width: "100%",
@@ -198,7 +282,7 @@ const styles = StyleSheet.create({
   infoText: {
     justifyContent: "center",
     color: "white",
-    fontSize: 35,
+    fontSize: 45,
   },
   areaLabel: {
     fontSize: 35,
@@ -209,5 +293,26 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+  counterText: {
+    fontSize: 25,
+    color: "#bebebe",
+  },
+  finishedText: {
+    fontSize: 25,
+    color: "#bebebe",
+  },
+  doneButtonContainer: {
+    position: "absolute",
+    top: height / 2 - 25,
+    left: width / 2 - 75,
+  },
+  doneButton: {
+    backgroundColor: "#51A3A3",
+    width: 150,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
   },
 });

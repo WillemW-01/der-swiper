@@ -12,10 +12,6 @@ const dataGarten = require("@/assets/decks/garten.json") as Word[];
 const dataSchule = require("@/assets/decks/schule.json") as Word[];
 const dataBadezimmer = require("@/assets/decks/badezimmer.json") as Word[];
 const dataKueche = require("@/assets/decks/kueche.json") as Word[];
-const test = [
-  { english: "Day", article: "der", singular: "Tag", plural: "die Tage" },
-  { english: "Way", article: "der", singular: "Weg", plural: "die Weg" },
-] as Word[];
 
 // prettier-ignore
 const database: { [key: string]: Word[] } = {
@@ -26,11 +22,10 @@ const database: { [key: string]: Word[] } = {
   Schule: dataSchule,
   Badezimmer: dataBadezimmer,
   Küche: dataKueche,
-  // Test: test,
 };
 
 export default function index() {
-  const decks = Object.keys(database);
+  const deckNames = Object.keys(database);
 
   const toGameScreen = (key: string) => {
     router.navigate({
@@ -49,7 +44,7 @@ export default function index() {
           das. Choose from some of the word decks below.
         </Text>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
-          {decks.map((deck) => {
+          {deckNames.map((deck) => {
             return <DeckCard key={deck} title={deck} onPress={toGameScreen} />;
           })}
           <DeckCard title="+" onPress={() => {}} />
