@@ -143,9 +143,9 @@ export default function CardDeck() {
     setLastDirection(directionToArticle(direction));
   };
 
-  const outOfFrame = (name: string) => {
-    console.log(name + " left the screen!");
-  };
+  // const outOfFrame = (name: string) => {
+  //   console.log(name + " left the screen!");
+  // };
 
   const finishRound = () => {
     console.log("Finishing!");
@@ -187,7 +187,7 @@ export default function CardDeck() {
       <SafeAreaView style={styles.container}>
         <View style={styles.topContainer}>
           <Text style={styles.counterText}>{wordBank.length - progress}</Text>
-          <Text style={styles.areaLabel}>Das</Text>
+          <Text style={{ ...styles.areaLabel, flex: 1, textAlign: "center" }}>Das</Text>
           <Text style={styles.finishedText}>
             <Text style={{ color: "#e97d02" }}>{amountCorrect}</Text> |{" "}
             <Text style={{ color: "#da488f" }}>{progress - amountCorrect}</Text>
@@ -210,7 +210,7 @@ export default function CardDeck() {
                     key={index}
                     word={word}
                     swiped={handleSwipe}
-                    outOfFrame={outOfFrame}
+                    // outOfFrame={outOfFrame}
                   />
                 ))}
             </View>
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    paddingHorizontal: 20,
   },
   bottomContainer: {
     width: "100%",
@@ -305,10 +305,13 @@ const styles = StyleSheet.create({
   counterText: {
     fontSize: 25,
     color: "#bebebe",
+    width: 50,
   },
   finishedText: {
     fontSize: 25,
     color: "#bebebe",
+    width: 50,
+    textAlign: "right",
   },
   doneButtonContainer: {
     position: "absolute",

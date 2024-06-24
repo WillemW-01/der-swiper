@@ -1,31 +1,36 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import TinderCard from "react-tinder-card";
 import { Word } from "@/types/word";
+import { useState } from "react";
 
 interface Props {
   word: Word;
   swiped: (direction: Direction, word: Word) => void;
-  outOfFrame: (word: string) => void;
+  outOfFrame?: (word: string) => void;
 }
 
 type Direction = "left" | "right" | "up" | "down";
 
 export default function WordCard({ word, swiped, outOfFrame }: Props) {
+  const [showEnglish, setShowEnglish] = useState(false);
+
   return (
     <TinderCard
       key={word.singular}
       onSwipe={(dir) => swiped(dir, word)}
-      onCardLeftScreen={() => outOfFrame(word.singular)}
-      // onSwipeRequirementFulfilled={(direction: string) =>
-      //   console.log("Fulfilled, " + direction)
-      // }
+      // onCardLeftScreen={() => outOfFrame(word.singular)}
       swipeRequirementType="position"
       preventSwipe={["down"]}
     >
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>{word.singular}</Text>
+      <TouchableOpacity
+        style={styles.card}
+        onLongPress={() => setShowEnglish((prev) => !prev)}
+      >
+        <Text style={styles.cardTitle}>
+          {!showEnglish ? word.singular : word.english}
+        </Text>
         <Text style={styles.cardTitle}>(pl. {word.plural})</Text>
-      </View>
+      </TouchableOpacity>
     </TinderCard>
   );
 }
