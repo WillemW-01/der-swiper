@@ -13,13 +13,22 @@ export type Progress = 0 | 1 | 2 | 3 | 4;
 
 const tierColors = {
   0: "#219ebc",
-  1: "#023047",
-  2: "#d00000",
+  1: "#75C673",
+  2: "#EE6676",
   3: "#ffb703",
   4: "#fb8500",
 };
 
-const borderWidth = 6;
+const borderWidth = 8;
+
+const setBorder = (
+  color: string,
+  position: "Top" | "Left" | "Bottom" | "Right",
+  tempBorder: ViewStyle
+) => {
+  tempBorder[`border${position}Width`] = borderWidth;
+  tempBorder[`border${position}Color`] = color;
+};
 
 const getProgressBorder = (
   tier: Tier | null | undefined,
@@ -27,17 +36,18 @@ const getProgressBorder = (
 ) => {
   if ((tier || tier == 0) && (progress || progress == 0)) {
     let progressBorder = {
-      borderColor: tierColors[tier],
+      borderColor: tierColors[tier] + "50",
+      borderWidth: borderWidth,
     } as ViewStyle;
 
     // prettier-ignore
     switch (progress) {
-      // INTENTIONAL FALLTHROUGH!
+      // INTENTIONAL FALLTHROUGH
       case 0: break;
-      case 4: progressBorder.borderTopWidth = borderWidth;
-      case 3: progressBorder.borderLeftWidth = borderWidth;
-      case 2: progressBorder.borderBottomWidth = borderWidth;
-      case 1: progressBorder.borderRightWidth = borderWidth;
+      case 4: setBorder(tierColors[tier], "Top", progressBorder);
+      case 3: setBorder(tierColors[tier], "Left", progressBorder);
+      case 2: setBorder(tierColors[tier], "Bottom", progressBorder);
+      case 1: setBorder(tierColors[tier], "Right", progressBorder);
     }
 
     return progressBorder;
