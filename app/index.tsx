@@ -10,6 +10,14 @@ import { useDatabase } from "@/hooks/useDatabase";
 import { Word } from "@/types/word";
 import { DeckData } from "@/types/decks";
 
+const shuffleArray = (array: Word[]): Word[] => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 export default function index() {
   const [deckNames, setDeckNames] = useState<DeckData[]>();
 
@@ -23,7 +31,7 @@ export default function index() {
     router.navigate({
       pathname: "/gameScreen",
       params: {
-        deck: JSON.stringify(deckWords),
+        deck: JSON.stringify(shuffleArray(deckWords)),
         title: deck.title,
         amountCorrect: -1,
         progress: -1,

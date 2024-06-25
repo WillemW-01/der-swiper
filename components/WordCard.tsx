@@ -24,6 +24,7 @@ export default function WordCard({ word, swiped, outOfFrame }: Props) {
     >
       <TouchableOpacity
         style={styles.card}
+        activeOpacity={0.8}
         onLongPress={() => setShowEnglish((prev) => !prev)}
       >
         <Text style={styles.cardTitle}>
