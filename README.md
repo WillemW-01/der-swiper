@@ -2,6 +2,10 @@
 
 Simple Tinder-like game to practice article memorization in learning German.
 
+## Demo
+
+https://github.com/user-attachments/assets/33f43ee8-4c42-4628-a35a-9cb42a268fed
+
 ## Installation
 
 These instructions will get you a copy of the project up and running on your local machine
