@@ -17,13 +17,13 @@ for development and testing purposes.
 2. Clone the repository
 
 ```bash
-$ git clone git@github.com:WillemW-01/spotifyplus.git
+$ git clone git@github.com:WillemW-01/der-swiper.git
 ```
 
 3. Install dependencies
 
 ```bash
-$ cd spotify-plus
+$ cd der-swiper
 $ npm install
 ```
 
