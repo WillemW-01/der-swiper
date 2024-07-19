@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import BackgroundGradient from "@/components/BackgroundGradient";
 import WordCard from "@/components/WordCard";
+import ThemedButton from "@/components/ThemedButton";
 
 const switchTable = {
   left: "der",
@@ -143,10 +144,6 @@ export default function CardDeck() {
     setLastDirection(directionToArticle(direction));
   };
 
-  // const outOfFrame = (name: string) => {
-  //   console.log(name + " left the screen!");
-  // };
-
   const finishRound = () => {
     console.log("Finishing!");
     router.replace({
@@ -206,12 +203,7 @@ export default function CardDeck() {
               {wordBank &&
                 showCards &&
                 wordBank.map((word, index) => (
-                  <WordCard
-                    key={index}
-                    word={word}
-                    swiped={handleSwipe}
-                    // outOfFrame={outOfFrame}
-                  />
+                  <WordCard key={index} word={word} swiped={handleSwipe} />
                 ))}
             </View>
             <Text style={{ fontSize: 24, color: "#51a3a3", fontWeight: "bold" }}>
@@ -230,9 +222,7 @@ export default function CardDeck() {
           </View>
         </View>
         <Animated.View style={{ ...styles.doneButtonContainer, opacity: fadeInAnim }}>
-          <TouchableOpacity style={styles.doneButton} onPress={finishRound}>
-            <Text style={{ color: "white", fontSize: 25 }}>Done</Text>
-          </TouchableOpacity>
+          <ThemedButton title="Done" onPress={finishRound} />
         </Animated.View>
       </SafeAreaView>
     </Animated.View>
@@ -317,13 +307,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: height / 2 - 25,
     left: width / 2 - 75,
-  },
-  doneButton: {
-    backgroundColor: "#51A3A3",
-    width: 150,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
   },
 });

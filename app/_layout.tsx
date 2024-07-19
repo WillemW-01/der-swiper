@@ -5,7 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 // import * as NavigationBar from "expo-navigation-bar";
 // import { useEffect } from "react";
 
-const DEV = false;
+const DEV = true;
 
 export default function RootLayout() {
   // async function changeNavigationBar() {
@@ -31,9 +31,19 @@ export default function RootLayout() {
     >
       <SafeAreaProvider>
         <StatusBar barStyle={"light-content"} />
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="gameScreen" options={{ headerShown: false }} />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade_from_bottom",
+            animationDuration: 500,
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="gameScreen" />
+          <Stack.Screen name="adjektive" />
+          <Stack.Screen name="derDieDas" />
+          <Stack.Screen name="habenSein" />
+          <Stack.Screen name="nomAkkDat" />
         </Stack>
       </SafeAreaProvider>
     </SQLiteProvider>
