@@ -22,7 +22,7 @@ const shuffleArray = (array: Word[]): Word[] => {
 export default function DerDieDas() {
   const [deckNames, setDeckNames] = useState<DeckData[]>();
 
-  const { deck, title, amountCorrect, progress } = useLocalSearchParams();
+  const { deck, title, allCorrect } = useLocalSearchParams();
   const dbMan = useDatabase();
 
   const toGameScreen = async (deck: DeckData) => {
@@ -34,8 +34,7 @@ export default function DerDieDas() {
       params: {
         deck: JSON.stringify(shuffleArray(deckWords)),
         title: deck.title,
-        amountCorrect: -1,
-        progress: -1,
+        allCorrect: "false",
       },
     });
   };
@@ -52,13 +51,12 @@ export default function DerDieDas() {
 
   const updateData = async () => {
     const deckData = await dbMan.loadProgressData();
-    // console.log(`DeckData: `, deckData);
 
-    if (amountCorrect && progress && title) {
+    if (allCorrect && title) {
       const lastTitle = title as string;
       const deck = deckData[deckData.findIndex((deck) => deck.title == lastTitle)];
 
-      if (amountCorrect == progress) {
+      if (allCorrect) {
         console.log("All correct!");
 
         if (deck.tier == 4 && deck.progress == 4) {
@@ -76,7 +74,7 @@ export default function DerDieDas() {
           await dbMan.updateDeck(deck);
         }
       } else {
-        console.log("Not all correct: ", amountCorrect, progress);
+        console.log("Not all correct: ", allCorrect);
       }
     }
 

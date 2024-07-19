@@ -16,26 +16,14 @@ import ThemedButton from "@/components/ThemedButton";
 
 import { useFadeAnimation } from "@/hooks/useFadeAnimation";
 import { useFlashAnimation } from "@/hooks/useFlashAnimation";
-import { SwitchTable, table } from "@/constants/GameModeTables";
 
-// const switchTable = {
-//   ""
-// };
-
-const getSwitchTable = (title: string): SwitchTable => {
-  switch (title) {
-    case "Der Die Das":
-      return table.derDieDas;
-    case "Haben vs Sein":
-      return table.habenSein;
-    case "Akk vs Dat Verben":
-      return table.nomAkkDat;
-    default:
-      return table.derDieDas;
-  }
+const switchTable = {
+  left: "der",
+  right: "die",
+  up: "das",
+  down: "error",
 };
 
-type GameMode = "Der Die Das" | "Haben vs Sein" | "Akk vs Dat Verben";
 type Direction = "left" | "right" | "up" | "down";
 
 export interface Word {
@@ -45,14 +33,13 @@ export interface Word {
   plural: string;
 }
 
-export default function GameScreenSwipe() {
-  const { deck, title, gameMode } = useLocalSearchParams() as {
-    deck: string;
-    title: string;
-    gameMode: GameMode;
-  };
+const directionToArticle = (direction: Direction): string => {
+  return switchTable[`${direction}`];
+};
+
+export default function CardDeck() {
+  const { deck, title } = useLocalSearchParams() as { deck: string; title: string };
   const wordBank = JSON.parse(deck) as Word[];
-  const switchTable = getSwitchTable(gameMode);
 
   const [showCards, setShowCards] = useState(true);
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
@@ -72,10 +59,6 @@ export default function GameScreenSwipe() {
     setHasFaded,
   } = useFadeAnimation();
 
-  const directionToArticle = (direction: Direction): string => {
-    return switchTable[`${direction}`];
-  };
-
   const handleSwipe = (direction: Direction, word: Word) => {
     const chosenArticle = directionToArticle(direction);
     console.log(`Chosen article: ${chosenArticle}, correct: ${word.article}`);
@@ -89,6 +72,8 @@ export default function GameScreenSwipe() {
       flashColor("incorrect");
       fadeInAndOut();
     }
+
+    // setLastDirection(directionToArticle(direction));
   };
 
   const finishRound = () => {
