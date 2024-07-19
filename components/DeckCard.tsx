@@ -6,6 +6,7 @@ interface Props {
   onPress: (deck: string) => void;
   tier?: Tier;
   progress?: Progress;
+  disabled?: boolean;
 }
 
 export type Tier = 0 | 1 | 2 | 3 | 4;
@@ -56,7 +57,13 @@ const getProgressBorder = (
   }
 };
 
-export default function DeckCard({ title, onPress, tier, progress }: Props) {
+export default function DeckCard({
+  title,
+  onPress,
+  tier,
+  progress,
+  disabled = false,
+}: Props) {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -70,6 +77,7 @@ export default function DeckCard({ title, onPress, tier, progress }: Props) {
         ...getProgressBorder(tier, progress),
       }}
       onPress={() => onPress(title)}
+      disabled={disabled}
     >
       <Text style={{ fontSize: 18 }}>{title}</Text>
     </TouchableOpacity>

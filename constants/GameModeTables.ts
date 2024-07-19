@@ -14,7 +14,7 @@ export const table = {
   nomAkkDat: {
     left: "akk",
     right: "dat",
-    up: "wech",
+    up: "wechsel",
     down: "error",
   },
 };

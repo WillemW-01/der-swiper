@@ -40,16 +40,6 @@ export default function DerDieDas() {
     });
   };
 
-  const resetData = async () => {
-    try {
-      await dbMan.resetDeckData();
-      const deckData = await dbMan.loadProgressData();
-      setDeckNames(deckData);
-    } catch (err) {
-      console.log("Couldn't reset data");
-    }
-  };
-
   const updateData = async () => {
     const deckData = await dbMan.loadProgressData();
 
@@ -110,7 +100,6 @@ export default function DerDieDas() {
             })}
           <DeckCard title="+" onPress={() => {}} />
         </ScrollView>
-        {/* <Button title="Reset" onPress={resetData} /> */}
       </SafeAreaView>
     </View>
   );

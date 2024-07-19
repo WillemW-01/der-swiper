@@ -1,13 +1,32 @@
 import BackgroundGradient from "@/components/BackgroundGradient";
+import ThemedButton from "@/components/ThemedButton";
+import { Word } from "@/types/word";
+import { router } from "expo-router";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function NomAkkDat() {
+  const toGameScreen = async () => {
+    // const deckWords = await dbMan.loadDeck(deck.id);
+    const deckWords = [] as Word[];
+    console.log(`Loaded deck: `, deckWords);
+
+    router.navigate({
+      pathname: "/gameScreen",
+      params: {
+        deck: JSON.stringify(deckWords),
+        title: "test",
+        allCorrect: "false",
+        gameMode: "nomAkkDat",
+      },
+    });
+  };
+
   return (
     <View style={styles.rootContainer}>
       <BackgroundGradient />
       <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Der Die Das!</Text>
+        <Text style={styles.title}>Akkusativ vs Dativ Verben!</Text>
         <Text style={styles.paragraph}>
           This mode lets you choose whether a verb is akkusativ, dativ or both (wechsel)!
         </Text>
@@ -23,9 +42,9 @@ export default function NomAkkDat() {
                   progress={deck.progress}
                 />
               );
-            })}
-          <DeckCard title="+" onPress={() => {}} /> */}
+            })}*/}
         </ScrollView>
+        <ThemedButton title="Start" onPress={toGameScreen} absoluteBottom />
         {/* <Button title="Reset" onPress={resetData} /> */}
       </SafeAreaView>
     </View>

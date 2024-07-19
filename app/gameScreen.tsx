@@ -82,7 +82,7 @@ export default function GameScreenSwipe() {
 
   const finishRound = () => {
     console.log("Finishing!");
-    router.replace({
+    router.navigate({
       pathname: `/${gameMode}`,
       params: {
         deck,

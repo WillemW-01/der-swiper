@@ -1,8 +1,17 @@
 import BackgroundGradient from "@/components/BackgroundGradient";
+import DeckCard from "@/components/DeckCard";
 import ThemedButton from "@/components/ThemedButton";
 import { Word } from "@/types/word";
 import { router } from "expo-router";
-import { View, Text, ScrollView, StyleSheet, Button, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Button,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HabenSein() {
@@ -31,7 +40,8 @@ export default function HabenSein() {
           This mode allows you to clasify verbs into either haben or sein. Remember
           "moving" or "state changing" verbs use sein!
         </Text>
-        <ThemedButton title="Start" onPress={toGameScreen} absoluteCenter />
+        <DeckCard title="Tier 1" onPress={() => {}} tier={0} progress={0} disabled />
+        <ThemedButton title="Start" onPress={toGameScreen} absoluteBottom />
       </SafeAreaView>
     </View>
   );

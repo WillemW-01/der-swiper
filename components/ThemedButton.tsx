@@ -1,16 +1,18 @@
-import { TouchableOpacity, Text, ViewStyle, Dimensions } from "react-native";
+import { TouchableOpacity, Text, ViewStyle, Dimensions, Platform } from "react-native";
 
 interface Props {
   title: string;
   onPress: () => void;
   style?: ViewStyle;
   absoluteCenter?: boolean;
+  absoluteBottom?: boolean;
 }
 
 export default function ThemedButton({
   title,
   onPress,
   absoluteCenter = false,
+  absoluteBottom = false,
   style,
 }: Props) {
   const { width, height } = Dimensions.get("window");
@@ -31,6 +33,14 @@ export default function ThemedButton({
           position: "absolute",
           left: width / 2 - 75,
           top: height / 2 - 25,
+        },
+        absoluteBottom && {
+          position: "absolute",
+          left: width / 2 - 75,
+          bottom: Platform.select({
+            ios: 70,
+            android: 45,
+          }),
         },
       ]}
       onPress={onPress}
