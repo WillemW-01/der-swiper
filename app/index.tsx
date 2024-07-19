@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, SafeAreaView, ScrollView, StyleSheet, Button } from "react-native";
+import { View, Text, ScrollView, StyleSheet, Button } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import BackgroundGradient from "@/components/BackgroundGradient";
 import DeckCard from "@/components/DeckCard";
@@ -110,7 +111,7 @@ export default function index() {
             })}
           <DeckCard title="+" onPress={() => {}} />
         </ScrollView>
-        <Button title="Reset" onPress={resetData} />
+        {/* <Button title="Reset" onPress={resetData} /> */}
       </SafeAreaView>
     </View>
   );
@@ -124,10 +125,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    padding: 20,
   },
   title: {
-    fontSize: 35,
+    fontSize: 30,
     color: "white",
   },
   paragraph: {

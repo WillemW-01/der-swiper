@@ -5,10 +5,10 @@ import {
   Text,
   View,
   TouchableOpacity,
-  SafeAreaView,
   Animated,
   Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import BackgroundGradient from "@/components/BackgroundGradient";
 import WordCard from "@/components/WordCard";
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     fontSize: 45,
   },
   areaLabel: {
-    fontSize: 35,
+    fontSize: 30,
     color: "white",
   },
   resetButton: {
