@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -19,7 +19,6 @@ import { useFadeAnimation } from "@/hooks/useFadeAnimation";
 import { useFlashAnimation } from "@/hooks/useFlashAnimation";
 import { table } from "@/constants/GameModeTables";
 
-type GameMode = "Der Die Das" | "Haben vs Sein" | "Akk vs Dat Verben";
 type Direction = "left" | "right" | "up" | "down";
 
 export interface Word {
@@ -235,12 +234,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   counterText: {
-    fontSize: 25,
+    fontSize: Platform.select({ ios: 25, android: 20 }),
     color: "#bebebe",
     width: 50,
   },
   finishedText: {
-    fontSize: 25,
+    fontSize: Platform.select({ ios: 25, android: 20 }),
     color: "#bebebe",
     width: 50,
     textAlign: "right",

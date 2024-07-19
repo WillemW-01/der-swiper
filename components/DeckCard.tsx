@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, ViewStyle } from "react-native";
+import { Platform, Text, TouchableOpacity, ViewStyle } from "react-native";
 import { Word } from "@/types/word";
 
 interface Props {
@@ -79,7 +79,7 @@ export default function DeckCard({
       onPress={() => onPress(title)}
       disabled={disabled}
     >
-      <Text style={{ fontSize: 18 }}>{title}</Text>
+      <Text style={{ fontSize: Platform.select({ ios: 18, android: 16 }) }}>{title}</Text>
     </TouchableOpacity>
   );
 }

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import TinderCard from "react-tinder-card";
 import { Word } from "@/types/word";
 import { useState } from "react";
@@ -51,6 +51,6 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: "black",
-    fontSize: 25,
+    fontSize: Platform.select({ ios: 25, android: 20 }),
   },
 });
