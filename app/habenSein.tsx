@@ -1,14 +1,25 @@
 import BackgroundGradient from "@/components/BackgroundGradient";
 import ThemedButton from "@/components/ThemedButton";
+import { Word } from "@/types/word";
 import { router } from "expo-router";
 import { View, Text, ScrollView, StyleSheet, Button, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HabenSein() {
-  const toGameScreen = () => {
-    // do some things before going to screen
+  const toGameScreen = async () => {
+    // const deckWords = await dbMan.loadDeck(deck.id);
+    const deckWords = [] as Word[];
+    console.log(`Loaded deck: `, deckWords);
 
-    router.navigate("/gameScreen");
+    router.navigate({
+      pathname: "/gameScreen",
+      params: {
+        deck: JSON.stringify(deckWords),
+        title: "test",
+        allCorrect: "false",
+        gameMode: "habenSein",
+      },
+    });
   };
 
   return (

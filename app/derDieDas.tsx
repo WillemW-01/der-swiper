@@ -22,7 +22,7 @@ const shuffleArray = (array: Word[]): Word[] => {
 export default function DerDieDas() {
   const [deckNames, setDeckNames] = useState<DeckData[]>();
 
-  const { deck, title, allCorrect } = useLocalSearchParams();
+  const { title, allCorrect } = useLocalSearchParams();
   const dbMan = useDatabase();
 
   const toGameScreen = async (deck: DeckData) => {
@@ -35,6 +35,7 @@ export default function DerDieDas() {
         deck: JSON.stringify(shuffleArray(deckWords)),
         title: deck.title,
         allCorrect: "false",
+        gameMode: "derDieDas",
       },
     });
   };

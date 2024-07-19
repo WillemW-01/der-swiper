@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,24 +17,7 @@ import ThemedButton from "@/components/ThemedButton";
 
 import { useFadeAnimation } from "@/hooks/useFadeAnimation";
 import { useFlashAnimation } from "@/hooks/useFlashAnimation";
-import { SwitchTable, table } from "@/constants/GameModeTables";
-
-// const switchTable = {
-//   ""
-// };
-
-const getSwitchTable = (title: string): SwitchTable => {
-  switch (title) {
-    case "Der Die Das":
-      return table.derDieDas;
-    case "Haben vs Sein":
-      return table.habenSein;
-    case "Akk vs Dat Verben":
-      return table.nomAkkDat;
-    default:
-      return table.derDieDas;
-  }
-};
+import { table } from "@/constants/GameModeTables";
 
 type GameMode = "Der Die Das" | "Haben vs Sein" | "Akk vs Dat Verben";
 type Direction = "left" | "right" | "up" | "down";
@@ -45,14 +29,19 @@ export interface Word {
   plural: string;
 }
 
+const formatLabel = (s: string) => {
+  if (typeof s !== "string" || s === "error") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
 export default function GameScreenSwipe() {
   const { deck, title, gameMode } = useLocalSearchParams() as {
     deck: string;
     title: string;
-    gameMode: GameMode;
+    gameMode: keyof typeof table;
   };
   const wordBank = JSON.parse(deck) as Word[];
-  const switchTable = getSwitchTable(gameMode);
+  const switchTable = table[gameMode] ?? table.derDieDas;
 
   const [showCards, setShowCards] = useState(true);
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
@@ -72,17 +61,17 @@ export default function GameScreenSwipe() {
     setHasFaded,
   } = useFadeAnimation();
 
-  const directionToArticle = (direction: Direction): string => {
+  const translateDirection = (direction: Direction): string => {
     return switchTable[`${direction}`];
   };
 
   const handleSwipe = (direction: Direction, word: Word) => {
-    const chosenArticle = directionToArticle(direction);
-    console.log(`Chosen article: ${chosenArticle}, correct: ${word.article}`);
+    const choice = translateDirection(direction);
+    console.log(`Choice: ${choice}, correct: ${word.article}`);
     setCurrentWord(word);
     setProgress((prev) => prev + 1);
 
-    if (chosenArticle === word.article) {
+    if (choice === word.article) {
       flashColor("correct");
       setAmountCorrect((prev) => prev + 1);
     } else {
@@ -94,7 +83,7 @@ export default function GameScreenSwipe() {
   const finishRound = () => {
     console.log("Finishing!");
     router.replace({
-      pathname: "/derDieDas",
+      pathname: `/${gameMode}`,
       params: {
         deck,
         title,
@@ -130,7 +119,9 @@ export default function GameScreenSwipe() {
       <SafeAreaView style={styles.container}>
         <View style={styles.topContainer}>
           <Text style={styles.counterText}>{wordBank.length - progress}</Text>
-          <Text style={{ ...styles.areaLabel, flex: 1, textAlign: "center" }}>Das</Text>
+          <Text style={{ ...styles.areaLabel, flex: 1, textAlign: "center" }}>
+            {formatLabel(switchTable.up)}
+          </Text>
           <Text style={styles.finishedText}>
             <Text style={{ color: "#e97d02" }}>{amountCorrect}</Text> |{" "}
             <Text style={{ color: "#da488f" }}>{progress - amountCorrect}</Text>
@@ -138,7 +129,9 @@ export default function GameScreenSwipe() {
         </View>
         <View style={styles.bottomContainer}>
           <View style={styles.leftContainer}>
-            <Text style={styles.areaLabel}>Der</Text>
+            <Text style={styles.areaLabel} numberOfLines={1} ellipsizeMode="clip">
+              {formatLabel(switchTable.left)}
+            </Text>
           </View>
           <View style={styles.midContainer}>
             <Animated.View style={[styles.infoContainer, { opacity: fadeInAndOutAnim }]}>
@@ -164,7 +157,7 @@ export default function GameScreenSwipe() {
             </TouchableOpacity>
           </View>
           <View style={styles.rightContainer}>
-            <Text style={styles.areaLabel}>Die</Text>
+            <Text style={styles.areaLabel}>{formatLabel(switchTable.right)}</Text>
           </View>
         </View>
         <Animated.View style={{ ...styles.doneButtonContainer, opacity: fadeInAnim }}>
@@ -202,7 +195,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   midContainer: {
-    flex: 5,
+    flex: 3,
     height: "100%",
     alignItems: "center",
     gap: 10,
@@ -229,7 +222,10 @@ const styles = StyleSheet.create({
     fontSize: 45,
   },
   areaLabel: {
-    fontSize: 30,
+    fontSize: Platform.select({
+      ios: 30,
+      android: 22,
+    }),
     color: "white",
   },
   resetButton: {
