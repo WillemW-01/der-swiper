@@ -1,38 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, Button } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useNavigation } from "expo-router";
+import React, { useEffect } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import BackgroundGradient from "@/components/BackgroundGradient";
 import DeckCard from "@/components/DeckCard";
 
 import { useDatabase } from "@/hooks/useDatabase";
+import { useGameCompletion } from "@/hooks/useGameCompletion";
 
-import { WordArticle } from "@/types/word";
 import { DeckData } from "@/types/decks";
 
-const shuffleArray = (array: WordArticle[]): WordArticle[] => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};
-
 export default function DerDieDas() {
-  const [deckNames, setDeckNames] = useState<DeckData[]>();
-
-  const { title, allCorrect } = useLocalSearchParams();
+  const { updateData, deckNames } = useGameCompletion();
+  const navigation = useNavigation();
   const dbMan = useDatabase();
 
   const toGameScreen = async (deck: DeckData) => {
-    const deckWords = await dbMan.loadDeck(deck.id);
+    const deckWords = await dbMan.loadDeck(deck.id, true);
     console.log(`Loaded deck: `, deckWords);
 
     router.navigate({
       pathname: "/gameScreen",
       params: {
-        deck: JSON.stringify(shuffleArray(deckWords)),
+        deck: JSON.stringify(deckWords),
         title: deck.title,
         allCorrect: "false",
         gameMode: "derDieDas",
@@ -40,41 +31,16 @@ export default function DerDieDas() {
     });
   };
 
-  const updateData = async () => {
-    const deckData = await dbMan.loadProgressData("derDieDas");
-
-    if (allCorrect && title) {
-      const lastTitle = title as string;
-      const deck = deckData[deckData.findIndex((deck) => deck.title == lastTitle)];
-
-      if (allCorrect) {
-        console.log("All correct!");
-
-        if (deck.tier == 4 && deck.progress == 4) {
-          console.log("Max tier and progress!");
-          return;
-        } else {
-          console.log(`Before tier: ${deck.tier}, progress: ${deck.progress}`);
-          deck.progress += 1;
-          if (deck.progress > 4) {
-            deck.tier += deck.tier <= 3 ? 1 : 0;
-            deck.progress = 0;
-            console.log(`After tier: ${deck.tier}, progress: ${deck.progress}`);
-          }
-          console.log("Updating deck: ", deck);
-          await dbMan.updateDeck(deck);
-        }
-      } else {
-        console.log("Not all correct: ", allCorrect);
-      }
-    }
-
-    setDeckNames(deckData);
-  };
-
   useEffect(() => {
-    updateData();
-  }, []);
+    const unsub = navigation.addListener("focus", () => {
+      console.log("Screen is focused!");
+      updateData("derDieDas");
+    });
+
+    return () => {
+      unsub();
+    };
+  }, [navigation, updateData]);
 
   return (
     <View style={styles.rootContainer}>

@@ -2,6 +2,7 @@ import { useSQLiteContext } from "expo-sqlite";
 
 import { DeckData } from "@/types/decks";
 import { WordArticle, WordVerb } from "@/types/word";
+import { GameMode } from "@/types/gameMode";
 
 const gameModeSwitch = {
   derDieDas: "decks",
@@ -18,16 +19,22 @@ const queries = {
     "SELECT english, verb, perfectForm, usesSein FROM mappings_haben_sein JOIN haben_sein as b ON verb_id = b.id WHERE deck_id = ?;",
 };
 
+const shuffleArray = (array: WordArticle[]): WordArticle[] => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 export function useDatabase() {
   const db = useSQLiteContext();
 
   async function loadProgressData(
-    gameMode: keyof typeof gameModeSwitch
+    gameMode: keyof typeof gameModeSwitch & GameMode
   ): Promise<DeckData[]> {
     const targetDeck = gameModeSwitch[gameMode];
-    console.log("Target deck: ", targetDeck);
     const result = (await db.getAllAsync(`SELECT * FROM ${targetDeck}`)) as DeckData[];
-    console.log("All deckdata: ", result);
     return result;
   }
 
@@ -35,10 +42,13 @@ export function useDatabase() {
    *  DER DIE DAS SECTION
    ****************************************************************************/
 
-  async function loadDeck(deck: string | number): Promise<WordArticle[]> {
+  async function loadDeck(
+    deck: string | number,
+    shuffled: boolean = false
+  ): Promise<WordArticle[]> {
     const query = typeof deck === "string" ? queries.loadDeckTitle : queries.loadDeckId;
     const words = (await db.getAllAsync(query, deck)) as WordArticle[];
-    return words;
+    return shuffled ? shuffleArray(words) : words;
   }
 
   async function loadDecks() {
@@ -59,7 +69,7 @@ export function useDatabase() {
       "UPDATE decks SET progress = ?, tier = ? WHERE title = ?",
       [deck.progress, deck.tier, deck.title]
     );
-    console.log("Update result: ", result);
+    // console.log("Update result: ", result);
   }
 
   async function resetDeckData() {
