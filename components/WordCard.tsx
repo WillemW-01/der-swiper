@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import TinderCard from "react-tinder-card";
-import { Word } from "@/types/word";
+import { WordArticle } from "@/types/word";
 import { useState } from "react";
 
 interface Props {
-  word: Word;
-  swiped: (direction: Direction, word: Word) => void;
+  word: WordArticle;
+  swiped: (direction: Direction, word: WordArticle) => void;
   outOfFrame?: (word: string) => void;
 }
 

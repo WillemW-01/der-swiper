@@ -1,6 +1,6 @@
 import BackgroundGradient from "@/components/BackgroundGradient";
 import ThemedButton from "@/components/ThemedButton";
-import { Word } from "@/types/word";
+import { WordArticle } from "@/types/word";
 import { router } from "expo-router";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,7 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function NomAkkDat() {
   const toGameScreen = async () => {
     // const deckWords = await dbMan.loadDeck(deck.id);
-    const deckWords = [] as Word[];
+    const deckWords = [] as WordArticle[];
     console.log(`Loaded deck: `, deckWords);
 
     router.navigate({

@@ -1,5 +1,5 @@
 import { Platform, Text, TouchableOpacity, ViewStyle } from "react-native";
-import { Word } from "@/types/word";
+import { WordArticle } from "@/types/word";
 
 interface Props {
   title: string;

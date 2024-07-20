@@ -8,10 +8,10 @@ import DeckCard from "@/components/DeckCard";
 
 import { useDatabase } from "@/hooks/useDatabase";
 
-import { Word } from "@/types/word";
+import { WordArticle } from "@/types/word";
 import { DeckData } from "@/types/decks";
 
-const shuffleArray = (array: Word[]): Word[] => {
+const shuffleArray = (array: WordArticle[]): WordArticle[] => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -41,7 +41,7 @@ export default function DerDieDas() {
   };
 
   const updateData = async () => {
-    const deckData = await dbMan.loadProgressData();
+    const deckData = await dbMan.loadProgressData("derDieDas");
 
     if (allCorrect && title) {
       const lastTitle = title as string;

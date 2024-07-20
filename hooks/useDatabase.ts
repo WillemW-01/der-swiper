@@ -1,27 +1,43 @@
 import { useSQLiteContext } from "expo-sqlite";
 
 import { DeckData } from "@/types/decks";
-import { Word } from "@/types/word";
+import { WordArticle, WordVerb } from "@/types/word";
+
+const gameModeSwitch = {
+  derDieDas: "decks",
+  habenSein: "decks_haben_sein",
+  nomAkkDat: "decks_nom_akk_dat",
+};
 
 const queries = {
   loadDeckTitle:
     "SELECT english, article, singular, plural FROM words JOIN (SELECT word_id FROM decks JOIN deck_mappings ON decks.id = deck_mappings.deck_id WHERE title = ?) ON id = word_id;",
   loadDeckId:
     "SELECT english, article, singular, plural FROM deck_mappings JOIN words ON word_id = id WHERE deck_id = ?;",
+  loadHabenSein:
+    "SELECT english, verb, perfectForm, usesSein FROM mappings_haben_sein JOIN haben_sein as b ON verb_id = b.id WHERE deck_id = ?;",
 };
 
 export function useDatabase() {
   const db = useSQLiteContext();
 
-  async function loadProgressData(): Promise<DeckData[]> {
-    const result = (await db.getAllAsync("SELECT * FROM decks")) as DeckData[];
+  async function loadProgressData(
+    gameMode: keyof typeof gameModeSwitch
+  ): Promise<DeckData[]> {
+    const targetDeck = gameModeSwitch[gameMode];
+    console.log("Target deck: ", targetDeck);
+    const result = (await db.getAllAsync(`SELECT * FROM ${targetDeck}`)) as DeckData[];
     console.log("All deckdata: ", result);
     return result;
   }
 
-  async function loadDeck(deck: string | number): Promise<Word[]> {
+  /*****************************************************************************
+   *  DER DIE DAS SECTION
+   ****************************************************************************/
+
+  async function loadDeck(deck: string | number): Promise<WordArticle[]> {
     const query = typeof deck === "string" ? queries.loadDeckTitle : queries.loadDeckId;
-    const words = (await db.getAllAsync(query, deck)) as Word[];
+    const words = (await db.getAllAsync(query, deck)) as WordArticle[];
     return words;
   }
 
@@ -29,7 +45,7 @@ export function useDatabase() {
     const deckData = (await db.getAllAsync("SELECT * FROM decks")) as DeckData[];
     console.log("All decks: ", deckData);
 
-    const decks = {} as { [key: string]: Word[] };
+    const decks = {} as { [key: string]: WordArticle[] };
     for (let i = 0; i < deckData.length; i++) {
       const currentDeck = deckData[i];
       const words = await loadDeck(currentDeck.id);
@@ -57,11 +73,21 @@ export function useDatabase() {
     }
   }
 
+  /*****************************************************************************
+   *  HABEN SEIN SECTION
+   ****************************************************************************/
+
+  async function loadHabenSein(deckId: number): Promise<WordVerb[]> {
+    const words = (await db.getAllAsync(queries.loadHabenSein, deckId)) as WordVerb[];
+    return words;
+  }
+
   return {
     loadProgressData,
     loadDeck,
     loadDecks,
     updateDeck,
     resetDeckData,
+    loadHabenSein,
   };
 }
