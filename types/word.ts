@@ -11,3 +11,11 @@ export interface WordVerb {
   perfectForm: string;
   usesSein: boolean;
 }
+
+export function isWordArticle(word: WordArticle | WordVerb): word is WordArticle {
+  return (word as WordArticle).article !== undefined;
+}
+
+export function isWordVerb(word: WordArticle | WordVerb): word is WordVerb {
+  return (word as WordVerb).verb !== undefined;
+}

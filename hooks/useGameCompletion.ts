@@ -4,21 +4,22 @@ import { DeckData } from "@/types/decks";
 import { GameMode } from "@/types/gameMode";
 import { useState } from "react";
 
-export function useGameCompletion() {
+export function useGameCompletion(gameMode: GameMode) {
   const [deckNames, setDeckNames] = useState<DeckData[]>();
 
   const { title, allCorrect } = useLocalSearchParams();
-  const dbMan = useDatabase();
+  const dbMan = useDatabase(gameMode);
 
-  const updateData = async (gameMode: GameMode) => {
+  const updateData = async () => {
     console.log("Running update data");
-    const deckData = await dbMan.loadProgressData(gameMode);
+    const deckData = await dbMan.loadProgressData();
+    console.log("Loaded deck data: ", deckData);
 
     if (allCorrect && title) {
       const lastTitle = title as string;
       const deck = deckData[deckData.findIndex((deck) => deck.title == lastTitle)];
 
-      if (allCorrect) {
+      if (allCorrect === "true") {
         console.log("All correct!");
 
         if (deck.tier == 4 && deck.progress == 4) {

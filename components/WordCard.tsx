@@ -1,36 +1,44 @@
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import TinderCard from "react-tinder-card";
-import { WordArticle } from "@/types/word";
+import { WordArticle, WordVerb, isWordArticle } from "@/types/word";
 import { useState } from "react";
+import { Direction } from "@/app/gameScreen";
 
 interface Props {
-  word: WordArticle;
-  swiped: (direction: Direction, word: WordArticle) => void;
+  word: WordArticle | WordVerb;
+  swiped: (direction: Direction, target: string) => void;
   outOfFrame?: (word: string) => void;
 }
 
-type Direction = "left" | "right" | "up" | "down";
+const seinToText = (usesSein: boolean) => {
+  return usesSein ? "sein" : "haben";
+};
 
-export default function WordCard({ word, swiped, outOfFrame }: Props) {
+export default function WordCard({ word, swiped }: Props) {
   const [showEnglish, setShowEnglish] = useState(false);
+  const isArticle = isWordArticle(word);
+  const presentedWord = isArticle ? word.singular : word.perfectForm;
+  const preventedDirections = isArticle ? ["down"] : ["up", "down"];
+  const target = isArticle ? word.article : seinToText(word.usesSein);
 
   return (
     <TinderCard
-      key={word.singular}
-      onSwipe={(dir) => swiped(dir, word)}
-      // onCardLeftScreen={() => outOfFrame(word.singular)}
+      key={isArticle ? word.singular : word.verb}
+      onSwipe={(dir) => swiped(dir, target)}
       swipeRequirementType="position"
-      preventSwipe={["down"]}
+      preventSwipe={preventedDirections}
     >
       <TouchableOpacity
         style={styles.card}
-        activeOpacity={0.8}
+        activeOpacity={0.9}
         onLongPress={() => setShowEnglish((prev) => !prev)}
       >
         <Text style={styles.cardTitle}>
-          {!showEnglish ? word.singular : word.english}
+          {!showEnglish ? presentedWord : word.english}
         </Text>
-        <Text style={styles.cardTitle}>(pl. {word.plural})</Text>
+        <Text style={styles.cardTitle}>
+          {isArticle ? `(pl.  ${word.plural})` : `(inf. ${word.verb})`}
+        </Text>
       </TouchableOpacity>
     </TinderCard>
   );

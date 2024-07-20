@@ -18,18 +18,16 @@ import ThemedButton from "@/components/ThemedButton";
 import { useFadeAnimation } from "@/hooks/useFadeAnimation";
 import { useFlashAnimation } from "@/hooks/useFlashAnimation";
 import { table } from "@/constants/GameModeTables";
+import { WordArticle, WordVerb } from "@/types/word";
+import { conjugations, getRandomPerson, Person } from "@/constants/Conjugations";
 
-type Direction = "left" | "right" | "up" | "down";
+export type Direction = "left" | "right" | "up" | "down";
 
-export interface Word {
-  english: string;
-  article: string;
-  singular: string;
-  plural: string;
-}
-
-const formatLabel = (s: string) => {
+const formatLabel = (s: string, person?: Person) => {
   if (typeof s !== "string" || s === "error") return "";
+  if (person) {
+    return conjugations[s as keyof typeof conjugations][person];
+  }
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
@@ -39,11 +37,12 @@ export default function GameScreenSwipe() {
     title: string;
     gameMode: keyof typeof table;
   };
-  const wordBank = JSON.parse(deck) as Word[];
+  const wordBank = JSON.parse(deck) as WordArticle[] | WordVerb[];
   const switchTable = table[gameMode] ?? table.derDieDas;
+  const person = gameMode === "habenSein" ? (getRandomPerson() as Person) : undefined;
 
   const [showCards, setShowCards] = useState(true);
-  const [currentWord, setCurrentWord] = useState<Word | null>(null);
+  const [target, setTarget] = useState<string>("");
   const [progress, setProgress] = useState(0);
   const [amountCorrect, setAmountCorrect] = useState(0);
 
@@ -64,13 +63,14 @@ export default function GameScreenSwipe() {
     return switchTable[`${direction}`];
   };
 
-  const handleSwipe = (direction: Direction, word: Word) => {
+  const handleSwipe = (direction: Direction, target: string) => {
     const choice = translateDirection(direction);
-    console.log(`Choice: ${choice}, correct: ${word.article}`);
-    setCurrentWord(word);
+    // const target = isWordArticle(word) ? word.article : seinToText(word.usesSein);
+    console.log(`Choice: ${choice}, correct: ${target}`);
+    setTarget(target);
     setProgress((prev) => prev + 1);
 
-    if (choice === word.article) {
+    if (choice === target) {
       flashColor("correct");
       setAmountCorrect((prev) => prev + 1);
     } else {
@@ -80,13 +80,13 @@ export default function GameScreenSwipe() {
   };
 
   const finishRound = () => {
-    console.log("Finishing!");
+    console.log("Finishing round!");
     router.navigate({
       pathname: `/${gameMode}`,
       params: {
         deck,
         title,
-        allCorrect: String(amountCorrect == progress),
+        allCorrect: String(amountCorrect === progress),
       },
     });
   };
@@ -119,7 +119,7 @@ export default function GameScreenSwipe() {
         <View style={styles.topContainer}>
           <Text style={styles.counterText}>{wordBank.length - progress}</Text>
           <Text style={{ ...styles.areaLabel, flex: 1, textAlign: "center" }}>
-            {formatLabel(switchTable.up)}
+            {person ? person : formatLabel(switchTable.up)}
           </Text>
           <Text style={styles.finishedText}>
             <Text style={{ color: "#e97d02" }}>{amountCorrect}</Text> |{" "}
@@ -129,12 +129,15 @@ export default function GameScreenSwipe() {
         <View style={styles.bottomContainer}>
           <View style={styles.leftContainer}>
             <Text style={styles.areaLabel} numberOfLines={1} ellipsizeMode="clip">
-              {formatLabel(switchTable.left)}
+              {formatLabel(
+                switchTable.left,
+                gameMode == "habenSein" ? person : undefined
+              )}
             </Text>
           </View>
           <View style={styles.midContainer}>
             <Animated.View style={[styles.infoContainer, { opacity: fadeInAndOutAnim }]}>
-              {currentWord && <Text style={styles.infoText}>{currentWord.article}</Text>}
+              {target && <Text style={styles.infoText}>{target}</Text>}
             </Animated.View>
 
             <View style={styles.cardContainer}>
@@ -156,7 +159,12 @@ export default function GameScreenSwipe() {
             </TouchableOpacity>
           </View>
           <View style={styles.rightContainer}>
-            <Text style={styles.areaLabel}>{formatLabel(switchTable.right)}</Text>
+            <Text style={styles.areaLabel}>
+              {formatLabel(
+                switchTable.right,
+                gameMode == "habenSein" ? person : undefined
+              )}
+            </Text>
           </View>
         </View>
         <Animated.View style={{ ...styles.doneButtonContainer, opacity: fadeInAnim }}>

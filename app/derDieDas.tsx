@@ -12,9 +12,9 @@ import { useGameCompletion } from "@/hooks/useGameCompletion";
 import { DeckData } from "@/types/decks";
 
 export default function DerDieDas() {
-  const { updateData, deckNames } = useGameCompletion();
+  const { updateData, deckNames } = useGameCompletion("derDieDas");
   const navigation = useNavigation();
-  const dbMan = useDatabase();
+  const dbMan = useDatabase("derDieDas");
 
   const toGameScreen = async (deck: DeckData) => {
     const deckWords = await dbMan.loadDeck(deck.id, true);
@@ -34,7 +34,7 @@ export default function DerDieDas() {
   useEffect(() => {
     const unsub = navigation.addListener("focus", () => {
       console.log("Screen is focused!");
-      updateData("derDieDas");
+      updateData();
     });
 
     return () => {

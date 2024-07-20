@@ -12,12 +12,12 @@ import { useGameCompletion } from "@/hooks/useGameCompletion";
 import { DeckData } from "@/types/decks";
 
 export default function HabenSein() {
-  const { updateData, deckNames } = useGameCompletion();
+  const { updateData, deckNames } = useGameCompletion("habenSein");
   const navigation = useNavigation();
-  const dbMan = useDatabase();
+  const dbMan = useDatabase("habenSein");
 
   const toGameScreen = async (deck: DeckData) => {
-    const deckWords = await dbMan.loadHabenSein(deck.id);
+    const deckWords = await dbMan.loadDeck(deck.id);
     // const deckWords = [] as WordArticle[];
     console.log(`Loaded deck: `, deckWords);
 
@@ -25,7 +25,7 @@ export default function HabenSein() {
       pathname: "/gameScreen",
       params: {
         deck: JSON.stringify(deckWords),
-        title: "test",
+        title: deck.title,
         allCorrect: "false",
         gameMode: "habenSein",
       },
@@ -35,7 +35,7 @@ export default function HabenSein() {
   useEffect(() => {
     const unsub = navigation.addListener("focus", () => {
       console.log("Screen is focused!");
-      updateData("habenSein");
+      updateData();
     });
 
     return () => {
