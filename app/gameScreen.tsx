@@ -32,14 +32,15 @@ const formatLabel = (s: string, person?: Person) => {
 };
 
 export default function GameScreenSwipe() {
-  const { deck, title, gameMode } = useLocalSearchParams() as {
+  const { deck, title, gameMode, person } = useLocalSearchParams() as {
     deck: string;
     title: string;
     gameMode: keyof typeof table;
+    person?: Person;
   };
   const wordBank = JSON.parse(deck) as WordArticle[] | WordVerb[];
   const switchTable = table[gameMode] ?? table.derDieDas;
-  const person = gameMode === "habenSein" ? (getRandomPerson() as Person) : undefined;
+  // const person = gameMode === "habenSein" ? (getRandomPerson() as Person) : undefined;
 
   const [showCards, setShowCards] = useState(true);
   const [target, setTarget] = useState<string>("");
@@ -137,7 +138,13 @@ export default function GameScreenSwipe() {
           </View>
           <View style={styles.midContainer}>
             <Animated.View style={[styles.infoContainer, { opacity: fadeInAndOutAnim }]}>
-              {target && <Text style={styles.infoText}>{target}</Text>}
+              {target && (
+                <Text style={styles.infoText}>
+                  {person
+                    ? conjugations[target as keyof typeof conjugations][person]
+                    : target}
+                </Text>
+              )}
             </Animated.View>
 
             <View style={styles.cardContainer}>

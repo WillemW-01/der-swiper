@@ -10,6 +10,7 @@ import { useDatabase } from "@/hooks/useDatabase";
 import { useGameCompletion } from "@/hooks/useGameCompletion";
 
 import { DeckData } from "@/types/decks";
+import { getRandomPerson } from "@/constants/Conjugations";
 
 export default function HabenSein() {
   const { updateData, deckNames } = useGameCompletion("habenSein");
@@ -17,7 +18,7 @@ export default function HabenSein() {
   const dbMan = useDatabase("habenSein");
 
   const toGameScreen = async (deck: DeckData) => {
-    const deckWords = await dbMan.loadDeck(deck.id);
+    const deckWords = await dbMan.loadDeck(deck.id, true);
     // const deckWords = [] as WordArticle[];
     console.log(`Loaded deck: `, deckWords);
 
@@ -28,6 +29,7 @@ export default function HabenSein() {
         title: deck.title,
         allCorrect: "false",
         gameMode: "habenSein",
+        person: getRandomPerson(),
       },
     });
   };

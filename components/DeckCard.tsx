@@ -1,6 +1,4 @@
 import { Platform, Text, TouchableOpacity, ViewStyle } from "react-native";
-import { WordArticle } from "@/types/word";
-
 interface Props {
   title: string;
   onPress: (deck: string) => void;
@@ -31,15 +29,23 @@ const setBorder = (
   tempBorder[`border${position}Color`] = color;
 };
 
+const setInitialBorder = (tier: Tier): ViewStyle => {
+  const tierColor = Platform.select({
+    ios: tierColors[tier] + "50",
+    android: tierColors[tier] + "80",
+  });
+  return {
+    borderColor: tierColor,
+    borderWidth: borderWidth,
+  };
+};
+
 const getProgressBorder = (
   tier: Tier | null | undefined,
   progress: Progress | null | undefined
 ) => {
   if ((tier || tier == 0) && (progress || progress == 0)) {
-    let progressBorder = {
-      borderColor: tierColors[tier] + "50",
-      borderWidth: borderWidth,
-    } as ViewStyle;
+    let progressBorder = setInitialBorder(tier);
 
     // prettier-ignore
     switch (progress) {
@@ -50,7 +56,6 @@ const getProgressBorder = (
       case 2: setBorder(tierColors[tier], "Bottom", progressBorder);
       case 1: setBorder(tierColors[tier], "Right", progressBorder);
     }
-
     return progressBorder;
   } else {
     return {};
@@ -80,6 +85,11 @@ export default function DeckCard({
       disabled={disabled}
     >
       <Text style={{ fontSize: Platform.select({ ios: 18, android: 16 }) }}>{title}</Text>
+      {Platform.OS === "android" && progress != null && (
+        <Text style={{ fontSize: 10, position: "absolute", bottom: 10, right: 10 }}>
+          Progress: {progress} / 4
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }
